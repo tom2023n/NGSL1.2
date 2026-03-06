@@ -1,0 +1,92 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NGSL 零基础单词学习</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <main class="app">
+    <header class="hero">
+      <h1>NGSL 零基础单词学习</h1>
+    </header>
+
+    <section class="stats" aria-label="学习统计">
+      <div class="stat"><span id="totalCount">0</span><small>总词数</small></div>
+      <div class="stat"><span id="knownCount">0</span><small>已掌握</small></div>
+      <div class="stat"><span id="unknownCount">0</span><small>待复习</small></div>
+      <button id="focusUnknownBtn" type="button" class="stat stat-btn"><span id="unfamiliarCount">0</span><small>不认识（点击重点练习）</small></button>
+      <div class="stat"><span id="favoriteCount">0</span><small>收藏词</small></div>
+    </section>
+
+    <section class="progress-panel" aria-label="学习进度">
+      <div class="progress-top">
+        <strong id="progressLabel">学习进度 0%</strong>
+        <button id="resetProgressBtn" type="button" class="reset-progress-btn">清除进度</button>
+      </div>
+      <div class="progress-track">
+        <div id="progressFill" class="progress-fill"></div>
+      </div>
+    </section>
+
+    <section class="card-panel" aria-label="学习卡片">
+      <div class="controls">
+        <label>
+          学习范围
+          <select id="modeSelect">
+            <option value="all">全部词</option>
+            <option value="unknown">只看待复习</option>
+            <option value="favorite">只看收藏</option>
+            <option value="due">只看到期复习</option>
+          </select>
+        </label>
+        <button id="nextBtn" type="button">下一个</button>
+        <button id="speakBtn" type="button">朗读单词</button>
+      </div>
+
+      <article class="word-card" id="wordCard">
+        <p class="rank" id="rankText">#-</p>
+        <h2 id="wordText">加载中...</h2>
+        <p class="pron" id="pronText"></p>
+        <p class="pos" id="posText"></p>
+        <p class="meaning" id="meaningText"></p>
+        <p class="example" id="exampleText"></p>
+        <button id="exampleSpeakBtn" type="button" class="example-speak-btn">播放例句</button>
+        <p class="example-cn" id="exampleCnText"></p>
+      </article>
+
+      <div class="actions">
+        <button id="knownBtn" type="button" class="good">我认识</button>
+        <button id="unknownBtn" type="button" class="warn">不认识</button>
+        <button id="favoriteBtn" type="button">收藏</button>
+      </div>
+    </section>
+
+    <section class="train" aria-label="训练模式">
+      <h3>训练模式</h3>
+      <p id="trainPrompt">中文释义加载中...</p>
+      <div class="train-input-wrap">
+        <input id="trainInput" type="text" autocomplete="off" placeholder="请输入对应的英文单词" />
+        <button id="submitTrainBtn" type="button">提交并下一题</button>
+      </div>
+      <p id="trainFeedback"></p>
+      <p id="trainAnswer"></p>
+      <p class="shortcut-help">快捷键：Ctrl+' 发音 · Ctrl+M 掌握 · Ctrl+N 生词 · Ctrl+; 显示答案 · Enter/Space 提交并下一题</p>
+    </section>
+
+    <section class="list" aria-label="词表搜索">
+      <h3>词表搜索</h3>
+      <input id="searchInput" type="search" placeholder="输入英文单词，例如: about" />
+      <ul id="listView"></ul>
+      <div class="pager">
+        <button id="prevPageBtn" type="button">上一页</button>
+        <span id="pageInfo">第 1 / 1 页</span>
+        <button id="nextPageBtn" type="button">下一页</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="./app.js"></script>
+</body>
+</html>
