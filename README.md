@@ -1,27 +1,73 @@
-﻿# NGSL 零基础单词站
+# New General Service List 1.20 Learning Dictionary 学习系统
 
-## 已完成
-- 数据来源：`https://www.linguaeruditio.com/Glossary/NGSL/CN/NGSL_ch_gloss.html`
-- 词库：`data/words.json`（当前 2809 条）
-- 完整词表（按 rank 排序）：`data/words_full_ranked.csv`
-- 功能：抽卡学习、认识/不认识、收藏、搜索、学习进度本地保存
-- 新增：浏览器英文朗读（TTS）、错词间隔复习（SRS 到期词）
-- 新增：词表分页（按 rank 顺序，每页 50 词，支持搜索分页）
-- 新增：每个单词自动生成简单例句（卡片和词表都可见）
-- 新增：训练模式（中文提示 -> 输入英文），快捷键：
-  - `Ctrl+'` 发音
-  - `Ctrl+M` 标记掌握
-  - `Ctrl+N` 标记生词
-  - `Ctrl+;` 显示答案
-  - `Enter` / `Space` 提交并下一题
+一个基于 `NGSL 1.2` 词表的静态英语学习网页，适合用来做中译英单词练习、顺序复习和本地进度管理。
+
+NGSL 1.2 是一份包含 `2809` 个单词的词汇表，收录了英语通用词汇和日常生活中最重要的词汇，适合第二语言学习者使用。
+
+## 功能特点
+
+- 按中文提示输入英文单词
+- 固定顺序出题
+- 支持按词性、首字母、关键词筛选
+- 搜索输入带 `300ms` 防抖
+- 自动保存学习进度
+- 支持导出 / 导入学习进度
+- 单词发音自动朗读两次
+- 例句支持点读
+- 例句下方显示中文翻译
+- 支持深色 / 浅色主题切换
+- 输入、答对、答错都有提示音
+
+## 文件结构
+
+- [index.html](./index.html)：主页面，包含界面、样式和交互逻辑
+- [words.js](./words.js)：词库数据，包含单词、中文、英文释义、例句和例句翻译
 
 ## 本地使用
-1. 直接双击 `index.html`（部分浏览器可能因 `fetch` 本地文件限制无法读 JSON）。
-2. 推荐在当前目录启动本地服务器：
-   - `python -m http.server 8000`
-   - 浏览器打开 `http://localhost:8000`
 
-## 重新抓取词表
-1. 下载网页源码到 `ngsl_raw.html`
-2. 执行：
-   - `powershell -ExecutionPolicy Bypass -File .\\scripts\\extract-ngsl.ps1`
+1. 下载或克隆仓库
+2. 保证 `index.html` 和 `words.js` 在同一目录
+3. 直接用浏览器打开 `index.html`
+
+如果浏览器对本地语音或文件读取有权限限制，也可以用任意静态服务器打开，例如：
+
+```bash
+python -m http.server 8000
+```
+
+然后访问：
+
+```text
+http://localhost:8000
+```
+
+## 上传到 GitHub
+
+这个项目是纯静态页面，上传时只需要这两个文件：
+
+- `index.html`
+- `words.js`
+
+如果你使用 GitHub Pages，可以直接把仓库发布为静态站点。
+
+## 学习进度说明
+
+页面会把学习数据保存在浏览器 `localStorage` 中，主要包括：
+
+- `ngsl2809.study.status.v1`：每个单词的掌握状态
+- `ngsl2809.study.history.v1`：最近练习记录
+- `ngsl2809.study.progress.v1`：当前练习位置
+- `ngsl2809.theme.v1`：当前主题设置
+
+你也可以通过页面中的“导出进度”和“导入进度”按钮手动备份或恢复数据。
+
+## 适合的使用方式
+
+- 每天顺序练习一小段
+- 先学习全部单词，再重点复习“生词”
+- 用导出功能备份自己的学习进度
+- 部署到 GitHub Pages 后在不同设备上访问
+
+## License
+
+如需开源发布，建议你根据自己的需要补充许可证，例如 `MIT`。

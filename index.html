@@ -1,92 +1,731 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NGSL 零基础单词学习</title>
-  <link rel="stylesheet" href="./styles.css" />
+  <title>New General Service List 1.20 Learning Dictionary 学习系统</title>
+  <style>
+    :root{--bg:#0b1120;--bg-glow-1:rgba(245,158,11,.18);--bg-glow-2:rgba(56,189,248,.16);--bg-gradient-start:#020617;--bg-gradient-mid:#0f172a;--bg-gradient-end:#111827;--card:rgba(15,23,42,.82);--card-strong:rgba(15,23,42,.95);--card-soft:rgba(15,23,42,.72);--pill-bg:rgba(30,41,59,.72);--bar-bg:rgba(51,65,85,.55);--text:#e5eefb;--muted:#94a3b8;--line:rgba(148,163,184,.2);--brand:#f59e0b;--accent:#38bdf8;--ok:#4ade80;--bad:#fb7185;--shadow:0 20px 40px rgba(2,6,23,.42)}
+    :root[data-theme="light"]{--bg:#f4f7fb;--bg-glow-1:rgba(245,158,11,.12);--bg-glow-2:rgba(14,165,233,.12);--bg-gradient-start:#fdfefe;--bg-gradient-mid:#eef4fb;--bg-gradient-end:#e6edf7;--card:rgba(255,255,255,.88);--card-strong:rgba(255,255,255,.96);--card-soft:rgba(248,250,252,.92);--pill-bg:rgba(241,245,249,.92);--bar-bg:rgba(203,213,225,.72);--text:#0f172a;--muted:#475569;--line:rgba(148,163,184,.35);--shadow:0 20px 40px rgba(148,163,184,.18)}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;color:var(--text);background:radial-gradient(circle at top left,var(--bg-glow-1),transparent 24%),radial-gradient(circle at bottom right,var(--bg-glow-2),transparent 30%),linear-gradient(180deg,var(--bg-gradient-start),var(--bg-gradient-mid) 42%,var(--bg-gradient-end));transition:background .25s ease,color .25s ease}
+    .page{max-width:1220px;margin:0 auto;padding:24px 18px 32px}
+    .hero,.layout{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(320px,.8fr);gap:18px}
+    .card,.panel{background:var(--card);border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow);backdrop-filter:blur(8px)}
+    .hero-card,.stats,.panel{padding:22px}
+    .hero-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+    .eyebrow,.tag,.pill,.status{display:inline-flex;align-items:center;border-radius:999px;border:1px solid var(--line);background:var(--pill-bg)}
+    .eyebrow{padding:6px 12px;color:var(--brand);font-size:13px;font-weight:700}
+    .theme-toggle{width:auto;min-width:132px;padding:10px 14px;font-weight:700;background:var(--card-strong)}
+    h1,h2{margin:0}
+    .hero-card h1{margin-top:14px;font-size:clamp(28px,4vw,40px);line-height:1.15}
+    .hero-card p,.muted{color:var(--muted)}
+    .hero-card p{line-height:1.8}
+    .chips,.tags,.modes,.actions{display:flex;flex-wrap:wrap;gap:10px}
+    .chips{margin-top:16px}
+    .tag,.pill,.status{padding:7px 10px;font-size:12px}
+    .modes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+    .modes .pill{position:relative;display:grid;grid-template-columns:42px minmax(0,1fr);align-items:center;gap:12px;min-height:82px;padding:14px 16px;border-radius:24px;background:linear-gradient(180deg,color-mix(in srgb,var(--card-strong) 88%, rgba(56,189,248,.08)),var(--card));box-shadow:inset 0 1px 0 rgba(255,255,255,.08),inset 0 -1px 0 rgba(56,189,248,.08),0 10px 24px rgba(2,6,23,.16);font-size:14px;font-weight:700;letter-spacing:.01em;cursor:pointer;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease,background .18s ease}
+    .modes .pill:hover{transform:translateY(-2px);border-color:rgba(56,189,248,.32);box-shadow:inset 0 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(56,189,248,.14),0 14px 26px rgba(2,6,23,.2)}
+    .modes .pill input{appearance:none;-webkit-appearance:none;display:block;flex:none;width:42px;min-width:42px;max-width:42px;height:42px;min-height:42px;max-height:42px;aspect-ratio:1 / 1;padding:0;margin:0;border-radius:50%;border:1.5px solid rgba(148,163,184,.58);background:radial-gradient(circle at 32% 30%,rgba(255,255,255,.98),rgba(226,232,240,.94) 62%,rgba(203,213,225,.88));box-shadow:inset 0 1px 2px rgba(255,255,255,.85),inset 0 -2px 6px rgba(148,163,184,.25),0 6px 12px rgba(2,6,23,.16);transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease,background .18s ease;cursor:pointer}
+    .modes .pill input::after{content:"";display:block;width:18px;height:18px;aspect-ratio:1 / 1;margin:10.5px auto 0;border-radius:50%;background:transparent;box-shadow:0 0 0 0 rgba(14,165,233,0);transition:background .18s ease,box-shadow .18s ease,transform .18s ease}
+    .modes .pill input:checked{border-color:#0ea5e9;background:radial-gradient(circle at 30% 28%,#f8fdff,#dbeafe 58%,#bfdbfe);box-shadow:inset 0 1px 3px rgba(255,255,255,.88),inset 0 -2px 8px rgba(56,189,248,.22),0 8px 18px rgba(14,165,233,.2)}
+    .modes .pill input:checked::after{background:linear-gradient(180deg,#22d3ee,#0284c7);box-shadow:0 0 0 5px rgba(34,211,238,.15),0 0 18px rgba(34,211,238,.28);transform:scale(1.03)}
+    .modes .pill:has(input:checked){border-color:rgba(34,211,238,.46);background:linear-gradient(180deg,rgba(8,47,73,.28),color-mix(in srgb,var(--card) 86%, rgba(14,165,233,.08)));box-shadow:inset 0 1px 0 rgba(255,255,255,.12),inset 0 -1px 0 rgba(34,211,238,.18),0 16px 28px rgba(8,47,73,.2)}
+    .modes .pill:has(input:focus-visible){outline:2px solid rgba(56,189,248,.7);outline-offset:3px}
+    .stats-top,.row-between,.study-head,.item-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+    .big{font-size:34px;font-weight:800;color:var(--brand)}
+    .bar{height:10px;border-radius:999px;background:var(--bar-bg);overflow:hidden;margin:10px 0 14px}
+    .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,#f59e0b,#38bdf8);transition:width .25s ease}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+    .mini{padding:12px;border:1px solid var(--line);border-radius:18px;background:var(--card-soft)}
+    .mini strong{display:block;margin-top:6px;font-size:24px}
+    .stats-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:16px}
+    .filters{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:14px 0}
+    .field{display:grid;gap:6px}
+    .field label{font-size:13px;color:var(--muted);font-weight:600}
+    select,input,button{width:100%;border-radius:14px;border:1px solid var(--line);background:var(--card-strong);color:var(--text);font:inherit}
+    select,input{padding:12px 14px;min-height:46px}
+    .study{padding:22px;border-radius:24px;border:1px solid var(--line);background:linear-gradient(180deg,var(--card-strong),var(--card))}
+    .label{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700}
+    .question{margin:14px 0 10px;font-size:clamp(26px,4vw,38px);font-weight:800;line-height:1.3}
+    .sub{color:var(--muted);line-height:1.7}
+    .answer{display:grid;gap:10px;margin-top:18px}
+    .answer input{text-align:center;font-size:22px}
+    .answer input.correct{border-color:rgba(74,222,128,.5);box-shadow:0 0 0 4px rgba(74,222,128,.15)}
+    .answer input.wrong{border-color:rgba(251,113,133,.5);box-shadow:0 0 0 4px rgba(251,113,133,.15)}
+    .feedback{min-height:22px;font-size:14px;color:var(--muted)}
+    .feedback.correct{color:var(--ok);font-weight:700}
+    .feedback.wrong{color:var(--bad);font-weight:700}
+    .reveal{display:grid;gap:8px;margin-top:12px;padding:14px;border:1px dashed rgba(148,163,184,.32);border-radius:18px;background:var(--card-soft)}
+    .reveal.hidden{display:none}
+    .reveal strong{font-size:26px}
+    .example-row{display:flex;align-items:center;gap:10px;justify-content:space-between}
+    .example-row button{width:38px;min-width:38px;min-height:38px;padding:0;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;font-size:16px;line-height:1}
+    .example-row button:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
+    button{padding:12px 14px;min-height:46px;cursor:pointer;transition:transform .16s ease,box-shadow .16s ease}
+    button:hover{transform:translateY(-1px);box-shadow:0 10px 22px rgba(2,6,23,.28)}
+    .primary{background:linear-gradient(135deg,#d97706,#f59e0b);color:#fff;border:none}
+    .success{background:rgba(34,197,94,.14);color:var(--ok)}
+    .warn{background:rgba(251,113,133,.12);color:var(--bad)}
+    .hotkeys{margin-top:14px;font-size:12px;color:var(--muted);line-height:1.8}
+    kbd{border:1px solid var(--line);border-bottom-width:2px;border-radius:8px;padding:2px 8px;background:rgba(30,41,59,.88);color:#e5eefb;font-size:11px;font-family:ui-monospace,Consolas,monospace;box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
+    :root[data-theme="light"] kbd{background:linear-gradient(180deg,#ffffff,#e2e8f0);color:#334155;border-color:rgba(148,163,184,.55);box-shadow:inset 0 1px 0 rgba(255,255,255,.95),0 1px 1px rgba(148,163,184,.18)}
+    .stack{display:grid;gap:18px}
+    .list{max-height:420px;overflow:auto;display:grid;gap:10px}
+    .item{padding:12px 14px;border-radius:18px;border:1px solid var(--line);background:var(--card);display:grid;gap:6px}
+    .item strong{font-size:16px}
+    .status-new{background:rgba(51,65,85,.5);color:var(--muted)}
+    .status-learning{background:rgba(59,130,246,.16);color:#93c5fd}
+    .status-mastered{background:rgba(34,197,94,.14);color:var(--ok)}
+    .status-unknown{background:rgba(251,113,133,.14);color:var(--bad)}
+    .empty{padding:16px;border:1px dashed rgba(148,163,184,.32);border-radius:16px;color:var(--muted);background:var(--card-soft);line-height:1.7}
+    @media (max-width:1080px){.hero,.layout{grid-template-columns:1fr}.filters,.modes{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media (max-width:720px){.page{padding:16px 12px 24px}.filters,.actions,.stats-actions,.modes{grid-template-columns:1fr;display:grid}.study-head{flex-direction:column}.grid{grid-template-columns:1fr 1fr}}
+  </style>
 </head>
 <body>
-  <main class="app">
-    <header class="hero">
-      <h1>NGSL 零基础单词学习</h1>
-    </header>
-
-    <section class="stats" aria-label="学习统计">
-      <div class="stat"><span id="totalCount">0</span><small>总词数</small></div>
-      <div class="stat"><span id="knownCount">0</span><small>已掌握</small></div>
-      <div class="stat"><span id="unknownCount">0</span><small>待复习</small></div>
-      <button id="focusUnknownBtn" type="button" class="stat stat-btn"><span id="unfamiliarCount">0</span><small>不认识（点击重点练习）</small></button>
-      <div class="stat"><span id="favoriteCount">0</span><small>收藏词</small></div>
+  <div class="page">
+    <section class="hero">
+      <div class="card hero-card">
+        <div class="hero-top">
+          <div class="eyebrow">New General Service List 1.20</div>
+          <button id="themeToggleBtn" class="theme-toggle" type="button">切换浅色主题</button>
+        </div>
+        <h1>Learning Dictionary 学习系统</h1>
+        <p>NGSL 1.2 是一份包含 2809 个单词的词汇表，收录了英语通用词汇和日常生活中最重要的词汇，适合第二语言学习者使用。根据中文提示输入英文单词，支持顺序练习、筛选复习、本地进度保存、自动朗读和练习提示音。</p>
+        <div class="chips">
+          <span class="tag">固定顺序出题</span>
+          <span class="tag">输入字母有键盘声</span>
+          <span class="tag">答对答错都有提示音</span>
+        </div>
+      </div>
+      <aside class="card stats">
+        <div class="stats-top">
+          <div><h2>学习总览</h2><div class="muted" id="summaryText">正在载入词库...</div></div>
+          <div class="big" id="totalWords">0</div>
+        </div>
+        <div class="row-between"><span class="muted">当前进度</span><strong id="progressText">0 / 0</strong></div>
+        <div class="bar"><span id="progressBar"></span></div>
+        <div class="grid">
+          <div class="mini"><div class="muted">已掌握</div><strong id="masteredCount">0</strong></div>
+          <div class="mini"><div class="muted">生词</div><strong id="unknownCount">0</strong></div>
+          <div class="mini"><div class="muted">已练习</div><strong id="seenCount">0</strong></div>
+          <div class="mini"><div class="muted">当前筛选</div><strong id="filteredCount">0</strong></div>
+        </div>
+        <div class="stats-actions">
+          <button id="exportProgressBtn" type="button">导出进度</button>
+          <button id="importProgressBtn" type="button">导入进度</button>
+        </div>
+        <input id="importProgressInput" type="file" accept="application/json,.json" hidden />
+      </aside>
     </section>
-
-    <section class="progress-panel" aria-label="学习进度">
-      <div class="progress-top">
-        <strong id="progressLabel">学习进度 0%</strong>
-        <button id="resetProgressBtn" type="button" class="reset-progress-btn">清除进度</button>
+    <section class="layout" style="margin-top:18px">
+      <div class="panel">
+        <h2>开始练习</h2>
+        <div class="filters">
+          <div class="field"><label for="partSelect">按词性</label><select id="partSelect"></select></div>
+          <div class="field"><label for="initialSelect">按首字母</label><select id="initialSelect"></select></div>
+          <div class="field"><label for="searchInput">搜索单词 / 中文</label><input id="searchInput" type="text" placeholder="例如 school / 学校" /></div>
+          <div class="field"><label for="sortSelect">出题顺序</label><select id="sortSelect"></select></div>
+        </div>
+        <div class="modes" style="margin-bottom:16px">
+          <label class="pill"><input type="radio" name="mode" value="all" checked /> 全部单词</label>
+          <label class="pill"><input type="radio" name="mode" value="new" /> 只练未标记</label>
+          <label class="pill"><input type="radio" name="mode" value="unknown" /> 只练生词</label>
+          <label class="pill"><input type="radio" name="mode" value="mastered" /> 复习已掌握</label>
+        </div>
+        <div class="study">
+          <div class="study-head">
+            <div>
+              <div class="label">中文提示</div>
+              <div class="question" id="questionText">正在准备题目...</div>
+              <div class="sub" id="questionHint">输入英文单词后按 Enter 提交。</div>
+            </div>
+            <div class="tags">
+              <span class="tag" id="wordIdTag">#0</span>
+              <span class="tag" id="partTag">词性</span>
+              <span class="tag" id="initialTag">首字母</span>
+            </div>
+          </div>
+          <div class="answer">
+            <input id="answerInput" type="text" autocomplete="off" placeholder="在这里输入英文单词" />
+            <div class="feedback" id="feedback">词库载入后会自动开始。你也可以按 Ctrl+' 播放当前单词发音。</div>
+          </div>
+          <div class="reveal hidden" id="revealPanel">
+            <div><strong id="answerReveal"></strong></div>
+            <div id="definitionText"></div>
+            <div class="example-row">
+              <div id="exampleText"></div>
+              <button id="exampleSpeakBtn" type="button" aria-label="朗读例句" title="朗读例句">🔊</button>
+            </div>
+            <div class="muted" id="exampleTranslationText"></div>
+          </div>
+          <div class="actions" style="margin-top:18px">
+            <button class="primary" id="submitBtn" type="button">提交答案</button>
+            <button id="hintBtn" type="button">显示答案</button>
+            <button id="speakBtn" type="button">朗读发音</button>
+            <button class="success" id="masterBtn" type="button">标记掌握</button>
+            <button class="warn" id="unknownBtn" type="button">标记生词</button>
+          </div>
+          <div class="hotkeys">
+            <kbd>Enter</kbd> 提交，
+            <kbd>Space</kbd> 下一题，
+            <kbd>Ctrl</kbd> + <kbd>'</kbd> 发音，
+            <kbd>Ctrl</kbd> + <kbd>;</kbd> 显示答案，
+            <kbd>Ctrl</kbd> + <kbd>M</kbd> 标记掌握，
+            <kbd>Ctrl</kbd> + <kbd>N</kbd> 标记生词
+          </div>
+        </div>
       </div>
-      <div class="progress-track">
-        <div id="progressFill" class="progress-fill"></div>
-      </div>
+      <aside class="stack">
+        <section class="panel">
+          <h2>当前筛选词单</h2>
+          <p class="muted" id="listSummary" style="margin:8px 0 14px">显示前 50 个结果，方便快速定位。</p>
+          <div class="list" id="wordList"></div>
+        </section>
+        <section class="panel">
+          <h2>最近练习记录</h2>
+          <p class="muted" style="margin:8px 0 14px">最近 12 次答题或手动标记会显示在这里。</p>
+          <div class="list" id="historyList"></div>
+        </section>
+      </aside>
     </section>
+  </div>
+  <script src="./words.js"></script>
+  <script>
+    const WORDS = Array.isArray(window.NGSL_WORDS) ? window.NGSL_WORDS : [];
+    const STORAGE_KEY = "ngsl2809.study.status.v1";
+    const HISTORY_KEY = "ngsl2809.study.history.v1";
+    const PROGRESS_KEY = "ngsl2809.study.progress.v1";
+    const THEME_KEY = "ngsl2809.theme.v1";
+    const TYPEWRITER_SOUND_SRC = "data:audio/mpeg;base64,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qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//ukZP+P8AAAaQAAAAgAAA0gAAABAAABpAAAACAAADSAAAAEqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq";
+    const savedProgress = loadJson(PROGRESS_KEY, {});
+    const state = { mode: savedProgress.mode || "all", sort: "sequential", part: savedProgress.part || "all", initial: savedProgress.initial || "all", search: savedProgress.search || "", index: Number.isInteger(savedProgress.index) ? savedProgress.index : 0, currentId: savedProgress.currentWordId || null, showAnswer: false, statusMap: loadJson(STORAGE_KEY, {}), history: loadJson(HISTORY_KEY, []) };
+    let audioCtx = null;
+    let currentTheme = localStorage.getItem(THEME_KEY) === "light" ? "light" : "dark";
+    let searchDebounceTimer = null;
+    let statusVersion = 0;
+    let filteredCacheKey = "";
+    let filteredCacheValue = [];
+    const typewriterPlayers = Array.from({ length: 6 }, () => {
+      const audio = new Audio(TYPEWRITER_SOUND_SRC);
+      audio.preload = "auto";
+      audio.volume = 0.95;
+      return audio;
+    });
+    let typewriterPlayerIndex = 0;
+    const els = {
+      totalWords: document.getElementById("totalWords"), summaryText: document.getElementById("summaryText"), progressText: document.getElementById("progressText"), progressBar: document.getElementById("progressBar"),
+      masteredCount: document.getElementById("masteredCount"), unknownCount: document.getElementById("unknownCount"), seenCount: document.getElementById("seenCount"), filteredCount: document.getElementById("filteredCount"),
+      partSelect: document.getElementById("partSelect"), initialSelect: document.getElementById("initialSelect"), searchInput: document.getElementById("searchInput"), sortSelect: document.getElementById("sortSelect"),
+      questionText: document.getElementById("questionText"), questionHint: document.getElementById("questionHint"), wordIdTag: document.getElementById("wordIdTag"), partTag: document.getElementById("partTag"), initialTag: document.getElementById("initialTag"),
+      answerInput: document.getElementById("answerInput"), feedback: document.getElementById("feedback"), revealPanel: document.getElementById("revealPanel"), answerReveal: document.getElementById("answerReveal"), definitionText: document.getElementById("definitionText"), exampleText: document.getElementById("exampleText"), exampleTranslationText: document.getElementById("exampleTranslationText"), exampleSpeakBtn: document.getElementById("exampleSpeakBtn"),
+      submitBtn: document.getElementById("submitBtn"), hintBtn: document.getElementById("hintBtn"), speakBtn: document.getElementById("speakBtn"), masterBtn: document.getElementById("masterBtn"), unknownBtn: document.getElementById("unknownBtn"), wordList: document.getElementById("wordList"), historyList: document.getElementById("historyList"), listSummary: document.getElementById("listSummary"), themeToggleBtn: document.getElementById("themeToggleBtn"), exportProgressBtn: document.getElementById("exportProgressBtn"), importProgressBtn: document.getElementById("importProgressBtn"), importProgressInput: document.getElementById("importProgressInput")
+    };
 
-    <section class="card-panel" aria-label="学习卡片">
-      <div class="controls">
-        <label>
-          学习范围
-          <select id="modeSelect">
-            <option value="all">全部词</option>
-            <option value="unknown">只看待复习</option>
-            <option value="favorite">只看收藏</option>
-            <option value="due">只看到期复习</option>
-          </select>
-        </label>
-        <button id="nextBtn" type="button">下一个</button>
-        <button id="speakBtn" type="button">朗读单词</button>
-      </div>
+    function loadJson(key, fallback){ try { const raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : fallback; } catch { return fallback; } }
+    function saveJson(key, value){ try { localStorage.setItem(key, JSON.stringify(value)); } catch {} }
+    function applyTheme(){
+      document.documentElement.setAttribute("data-theme", currentTheme);
+      els.themeToggleBtn.textContent = currentTheme === "dark" ? "切换浅色主题" : "切换深色主题";
+    }
+    function toggleTheme(){
+      currentTheme = currentTheme === "dark" ? "light" : "dark";
+      localStorage.setItem(THEME_KEY, currentTheme);
+      applyTheme();
+    }
+    function formatDate(value = new Date()){
+      const year = value.getFullYear();
+      const month = String(value.getMonth() + 1).padStart(2, "0");
+      const day = String(value.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    }
+    function downloadTextFile(filename, content){
+      const blob = new Blob([content], { type: "application/json;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+    function exportProgress(){
+      const payload = {
+        exportedAt: new Date().toISOString(),
+        version: 1,
+        [STORAGE_KEY]: loadJson(STORAGE_KEY, {}),
+        [HISTORY_KEY]: loadJson(HISTORY_KEY, []),
+        [PROGRESS_KEY]: loadJson(PROGRESS_KEY, {})
+      };
+      downloadTextFile(`ngsl-progress-${formatDate()}.json`, JSON.stringify(payload, null, 2));
+      setFeedback("学习进度已导出到本地文件。", "correct");
+    }
+    function isPlainObject(value){
+      return Boolean(value) && typeof value === "object" && !Array.isArray(value);
+    }
+    function sanitizeStatusMap(statusMap){
+      if (!isPlainObject(statusMap)) return null;
+      const allowed = new Set(["mastered", "unknown", "learning", "new"]);
+      const next = {};
+      for (const [word, value] of Object.entries(statusMap)) {
+        if (typeof word !== "string" || !isPlainObject(value)) return null;
+        const status = typeof value.status === "string" && allowed.has(value.status) ? value.status : "learning";
+        const correct = Number.isFinite(value.correct) ? Math.max(0, Number(value.correct)) : 0;
+        const wrong = Number.isFinite(value.wrong) ? Math.max(0, Number(value.wrong)) : 0;
+        const updatedAt = Number.isFinite(value.updatedAt) ? Number(value.updatedAt) : Date.now();
+        next[word] = { ...value, status, correct, wrong, updatedAt };
+      }
+      return next;
+    }
+    function sanitizeHistory(history){
+      if (!Array.isArray(history)) return null;
+      const next = [];
+      for (const item of history) {
+        if (!isPlainObject(item)) return null;
+        if (typeof item.word !== "string" || typeof item.chinese !== "string" || typeof item.action !== "string" || typeof item.at !== "string") return null;
+        next.push({ id: typeof item.id === "string" ? item.id : `${Date.now()}-${next.length}`, word: item.word, chinese: item.chinese, action: item.action, at: item.at });
+      }
+      return next.slice(0, 12);
+    }
+    function sanitizeProgress(progress){
+      if (!isPlainObject(progress)) return null;
+      const allowedModes = new Set(["all", "new", "unknown", "mastered"]);
+      return {
+        mode: allowedModes.has(progress.mode) ? progress.mode : "all",
+        part: typeof progress.part === "string" ? progress.part : "all",
+        initial: typeof progress.initial === "string" ? progress.initial : "all",
+        search: typeof progress.search === "string" ? progress.search : "",
+        index: Number.isInteger(progress.index) && progress.index >= 0 ? progress.index : 0,
+        currentWordId: Number.isInteger(progress.currentWordId) ? progress.currentWordId : null
+      };
+    }
+    function validateImportData(payload){
+      if (!isPlainObject(payload)) return { error: "导入文件不是有效的 JSON 对象。", data: null };
+      if (!(STORAGE_KEY in payload) || !(HISTORY_KEY in payload) || !(PROGRESS_KEY in payload)) return { error: "导入文件缺少必要的进度字段。", data: null };
+      const statusMap = sanitizeStatusMap(payload[STORAGE_KEY]);
+      if (!statusMap) return { error: "掌握状态数据格式不正确。", data: null };
+      const history = sanitizeHistory(payload[HISTORY_KEY]);
+      if (!history) return { error: "练习记录数据格式不正确。", data: null };
+      const progress = sanitizeProgress(payload[PROGRESS_KEY]);
+      if (!progress) return { error: "当前进度数据格式不正确。", data: null };
+      return { error: "", data: { statusMap, history, progress } };
+    }
+    function importProgressFile(file){
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const payload = JSON.parse(String(reader.result || "{}"));
+          const { error, data } = validateImportData(payload);
+          if (error) {
+            setFeedback(error, "wrong");
+            alert(error);
+            return;
+          }
+          saveJson(STORAGE_KEY, data.statusMap);
+          saveJson(HISTORY_KEY, data.history);
+          saveJson(PROGRESS_KEY, data.progress);
+          alert("进度导入成功，页面将自动刷新。");
+          location.reload();
+        } catch {
+          const message = "导入失败：文件内容不是有效的 JSON 格式。";
+          setFeedback(message, "wrong");
+          alert(message);
+        }
+      };
+      reader.onerror = () => {
+        const message = "导入失败：读取文件时出现错误。";
+        setFeedback(message, "wrong");
+        alert(message);
+      };
+      reader.readAsText(file, "utf-8");
+    }
+    function normalize(text){ return String(text || "").trim().toLowerCase(); }
+    function esc(text){ return String(text ?? "").replace(/[&<>"]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[char])); }
+    function statusOf(word){ return state.statusMap[word.word] || null; }
+    function invalidateFilteredWords(){ filteredCacheKey = ""; filteredCacheValue = []; }
+    function statusLabel(word){
+      const s = statusOf(word)?.status || "new";
+      return s === "mastered" ? "已掌握" : s === "unknown" ? "生词" : s === "learning" ? "学习中" : "未标记";
+    }
+    function ensureAudio(){
+      if (!("AudioContext" in window || "webkitAudioContext" in window)) return false;
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === "suspended") audioCtx.resume();
+      return true;
+    }
+    function playTone({ frequency = 440, duration = 0.08, type = "sine", gain = 0.03, delay = 0, endFrequency = null } = {}){
+      if (!ensureAudio()) return;
+      const now = audioCtx.currentTime + delay;
+      const oscillator = audioCtx.createOscillator();
+      const envelope = audioCtx.createGain();
+      oscillator.type = type;
+      oscillator.frequency.setValueAtTime(frequency, now);
+      if (endFrequency && endFrequency !== frequency) oscillator.frequency.exponentialRampToValueAtTime(endFrequency, now + duration);
+      envelope.gain.setValueAtTime(0.0001, now);
+      envelope.gain.exponentialRampToValueAtTime(gain, now + 0.004);
+      envelope.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+      oscillator.connect(envelope);
+      envelope.connect(audioCtx.destination);
+      oscillator.start(now);
+      oscillator.stop(now + duration + 0.02);
+    }
+    function playKeySound(){
+      const audio = typewriterPlayers[typewriterPlayerIndex];
+      typewriterPlayerIndex = (typewriterPlayerIndex + 1) % typewriterPlayers.length;
+      audio.currentTime = 0;
+      const playPromise = audio.play();
+      if (playPromise && typeof playPromise.catch === "function") playPromise.catch(() => {});
+    }
+    function playCorrectSound(){
+      playTone({ frequency: 1760, endFrequency: 2240, duration: 0.042, type: "triangle", gain: 0.042 });
+      playTone({ frequency: 2240, endFrequency: 3120, duration: 0.09, type: "sine", gain: 0.036, delay: 0.018 });
+      playTone({ frequency: 1180, endFrequency: 1380, duration: 0.06, type: "sine", gain: 0.012, delay: 0.012 });
+    }
+    function playWrongSound(){
+      playTone({ frequency: 300, endFrequency: 220, duration: 0.07, type: "square", gain: 0.02 });
+      playTone({ frequency: 210, endFrequency: 150, duration: 0.11, type: "sawtooth", gain: 0.016, delay: 0.018 });
+    }
 
-      <article class="word-card" id="wordCard">
-        <p class="rank" id="rankText">#-</p>
-        <h2 id="wordText">加载中...</h2>
-        <p class="pron" id="pronText"></p>
-        <p class="pos" id="posText"></p>
-        <p class="meaning" id="meaningText"></p>
-        <p class="example" id="exampleText"></p>
-        <button id="exampleSpeakBtn" type="button" class="example-speak-btn">播放例句</button>
-        <p class="example-cn" id="exampleCnText"></p>
-      </article>
+    applyTheme();
 
-      <div class="actions">
-        <button id="knownBtn" type="button" class="good">我认识</button>
-        <button id="unknownBtn" type="button" class="warn">不认识</button>
-        <button id="favoriteBtn" type="button">收藏</button>
-      </div>
-    </section>
+    function filteredWords(){
+      const cacheKey = JSON.stringify([state.mode, state.part, state.initial, normalize(state.search), statusVersion]);
+      if (cacheKey === filteredCacheKey) return filteredCacheValue;
+      let list = WORDS.slice();
+      if (state.part !== "all") list = list.filter((item) => item.partOfSpeech === state.part);
+      if (state.initial !== "all") list = list.filter((item) => item.initial === state.initial);
+      if (state.search) {
+        const key = normalize(state.search);
+        list = list.filter((item) => normalize(item.word).includes(key) || normalize(item.chinese).includes(key) || normalize(item.definition).includes(key));
+      }
+      if (state.mode === "new") list = list.filter((item) => !statusOf(item));
+      if (state.mode === "unknown") list = list.filter((item) => statusOf(item)?.status === "unknown");
+      if (state.mode === "mastered") list = list.filter((item) => statusOf(item)?.status === "mastered");
+      filteredCacheKey = cacheKey;
+      filteredCacheValue = list;
+      return list;
+    }
+    function saveProgress(){
+      const word = currentWord();
+      saveJson(PROGRESS_KEY, {
+        mode: state.mode,
+        part: state.part,
+        initial: state.initial,
+        search: state.search,
+        index: state.index,
+        currentWordId: word ? word.id : null
+      });
+    }
+    function restoreProgress(){
+      els.partSelect.value = state.part;
+      els.initialSelect.value = state.initial;
+      els.searchInput.value = state.search;
+      const selectedMode = document.querySelector(`input[name="mode"][value="${state.mode}"]`);
+      if (selectedMode) selectedMode.checked = true;
+      const list = filteredWords();
+      if (!list.length) {
+        state.index = 0;
+        state.currentId = null;
+        return;
+      }
+      const savedIndex = Math.min(Math.max(state.index, 0), list.length - 1);
+      const byIdIndex = state.currentId ? list.findIndex((item) => item.id === state.currentId) : -1;
+      state.index = byIdIndex >= 0 ? byIdIndex : savedIndex;
+      state.currentId = list[state.index]?.id || null;
+    }
+    function currentWord(){
+      const list = filteredWords();
+      if (!list.length) return null;
+      if (state.index >= list.length) state.index = 0;
+      state.currentId = list[state.index]?.id || null;
+      return list[state.index] || list[0];
+    }
+    function setFeedback(message, kind = "hint"){ els.feedback.textContent = message; els.feedback.className = `feedback ${kind === "hint" ? "" : kind}`.trim(); }
+    function pushHistory(word, action){
+      state.history = [{ id: `${Date.now()}`, word: word.word, chinese: word.chinese, action, at: new Date().toLocaleString("zh-CN", { hour12: false }) }, ...state.history].slice(0, 12);
+      saveJson(HISTORY_KEY, state.history);
+    }
+    function saveStatus(word, status, patch = {}, action = ""){
+      const prev = statusOf(word) || { correct: 0, wrong: 0 };
+      state.statusMap[word.word] = { ...prev, ...patch, status, updatedAt: Date.now() };
+      statusVersion += 1;
+      invalidateFilteredWords();
+      saveJson(STORAGE_KEY, state.statusMap);
+      if (action) pushHistory(word, action);
+      renderSide();
+      renderStats();
+      saveProgress();
+    }
+    function applyFilterChange(assign){
+      assign();
+      invalidateFilteredWords();
+      resetPosition();
+      render();
+    }
+    function showCurrentAnswer(){
+      const word = currentWord();
+      if (!word) return;
+      reveal(word);
+      setFeedback("已显示答案，可以继续听发音或手动标记状态。");
+    }
+    function markCurrentWord(status, action, feedbackKind, soundFn){
+      const word = currentWord();
+      if (!word) return;
+      saveStatus(word, status, {}, action);
+      soundFn();
+      setFeedback(`已标记为${action.replace("标记", "")}：${word.word}`, feedbackKind);
+    }
+    function handleCtrlShortcut(key){
+      if (key === "'") {
+        speakCurrentWord();
+        return true;
+      }
+      if (key === ";") {
+        const word = currentWord();
+        if (word) reveal(word);
+        return true;
+      }
+      if (key.toLowerCase() === "m") {
+        els.masterBtn.click();
+        return true;
+      }
+      if (key.toLowerCase() === "n") {
+        els.unknownBtn.click();
+        return true;
+      }
+      return false;
+    }
+    function reveal(word){
+      state.showAnswer = true;
+      els.revealPanel.classList.toggle("hidden", !word);
+      if (!word) return;
+      const exampleTranslation = word.exampleChinese || word.exampleZh || word.exampleTranslation || word.translation || "";
+      els.answerReveal.textContent = word.word;
+      els.definitionText.textContent = `英文释义：${word.definition || "暂无"}`;
+      els.exampleText.textContent = `例句：${word.example || "暂无"}`;
+      els.exampleTranslationText.textContent = `例句翻译：${exampleTranslation || "暂无例句翻译"}`;
+      els.exampleSpeakBtn.disabled = !word.example;
+    }
+    function hideReveal(){
+      state.showAnswer = false;
+      els.revealPanel.classList.add("hidden");
+      els.answerReveal.textContent = "";
+      els.definitionText.textContent = "";
+      els.exampleText.textContent = "";
+      els.exampleTranslationText.textContent = "";
+      els.exampleSpeakBtn.disabled = true;
+    }
+    function speakText(text, { repeat = 1, gap = 650, lang = "en-US", rate = 0.96 } = {}){
+      if (!text || !("speechSynthesis" in window)) return;
+      const speakOnce = (remaining) => {
+        const utter = new SpeechSynthesisUtterance(text);
+        utter.lang = lang;
+        utter.rate = rate;
+        utter.onend = () => {
+          if (remaining > 1) {
+            window.setTimeout(() => speakOnce(remaining - 1), gap);
+          }
+        };
+        window.speechSynthesis.speak(utter);
+      };
+      window.speechSynthesis.cancel();
+      speakOnce(repeat);
+    }
+    function speak(word){
+      if (!word) return;
+      const text = typeof word === "string" ? word : word.word;
+      if (!text) return;
+      const repeat = typeof word === "string" ? 1 : 2;
+      const gap = typeof word === "string" ? 0 : 650;
+      speakText(text, { repeat, gap });
+    }
+    function speakCurrentWord(){
+      const word = currentWord();
+      if (word) speak(word);
+    }
+    function nextWord({ autoSpeak = true } = {}){
+      const list = filteredWords();
+      if (!list.length) return;
+      state.index = (state.index + 1) % list.length;
+      hideReveal();
+      render();
+      saveProgress();
+      els.answerInput.focus();
+      if (autoSpeak) speakCurrentWord();
+    }
 
-    <section class="train" aria-label="训练模式">
-      <h3>训练模式</h3>
-      <p id="trainPrompt">中文释义加载中...</p>
-      <div class="train-input-wrap">
-        <input id="trainInput" type="text" autocomplete="off" placeholder="请输入对应的英文单词" />
-        <button id="submitTrainBtn" type="button">提交并下一题</button>
-      </div>
-      <p id="trainFeedback"></p>
-      <p id="trainAnswer"></p>
-      <p class="shortcut-help">快捷键：Ctrl+' 发音 · Ctrl+M 掌握 · Ctrl+N 生词 · Ctrl+; 显示答案 · Enter/Space 提交并下一题</p>
-    </section>
-
-    <section class="list" aria-label="词表搜索">
-      <h3>词表搜索</h3>
-      <input id="searchInput" type="search" placeholder="输入英文单词，例如: about" />
-      <ul id="listView"></ul>
-      <div class="pager">
-        <button id="prevPageBtn" type="button">上一页</button>
-        <span id="pageInfo">第 1 / 1 页</span>
-        <button id="nextPageBtn" type="button">下一页</button>
-      </div>
-    </section>
-  </main>
-
-  <script src="./app.js"></script>
+    function renderStats(){
+      const filtered = filteredWords();
+      const statusList = Object.values(state.statusMap);
+      const mastered = statusList.filter((item) => item.status === "mastered").length;
+      const unknown = statusList.filter((item) => item.status === "unknown").length;
+      const seen = statusList.length;
+      const current = filtered.length ? Math.min(state.index + 1, filtered.length) : 0;
+      els.totalWords.textContent = WORDS.length;
+      els.summaryText.textContent = `共 ${WORDS.length} 个词，当前筛选结果 ${filtered.length} 个`;
+      els.progressText.textContent = `${current} / ${filtered.length || 0}`;
+      els.progressBar.style.width = `${filtered.length ? current / filtered.length * 100 : 0}%`;
+      els.masteredCount.textContent = mastered;
+      els.unknownCount.textContent = unknown;
+      els.seenCount.textContent = seen;
+      els.filteredCount.textContent = filtered.length;
+    }
+    function renderSide(){
+      const filtered = filteredWords();
+      const preview = filtered.slice(0, 50);
+      els.listSummary.textContent = filtered.length ? `当前命中 ${filtered.length} 个词，下面显示前 ${preview.length} 个。` : "当前没有匹配的词，请调整筛选条件。";
+      els.wordList.innerHTML = preview.length ? preview.map((item) => `<div class="item"><div class="item-head"><strong>${esc(item.word)}</strong><span class="status status-${statusOf(item)?.status || "new"}">${statusLabel(item)}</span></div><div>${esc(item.chinese)}</div><div class="muted">${esc(item.partOfSpeech)} · ${esc(item.definition || "")}</div></div>`).join("") : '<div class="empty">没有可显示的词条。你可以清空搜索、切回“全部单词”，或更换词性筛选。</div>';
+      els.historyList.innerHTML = state.history.length ? state.history.map((item) => `<div class="item"><div class="item-head"><strong>${esc(item.word)}</strong><span class="tag">${esc(item.action)}</span></div><div>${esc(item.chinese)}</div><div class="muted">${esc(item.at)}</div></div>`).join("") : '<div class="empty">还没有练习记录。答一题或手动标记一个单词后，这里就会出现。</div>';
+    }
+    function renderQuestion(){
+      const word = currentWord();
+      if (!word) {
+        els.questionText.textContent = "当前筛选条件下没有可练习的单词";
+        els.questionHint.textContent = "试试清空搜索，或者切换到“全部单词”。";
+        els.wordIdTag.textContent = "#-";
+        els.partTag.textContent = "词性 -";
+        els.initialTag.textContent = "首字母 -";
+        hideReveal();
+        return;
+      }
+      els.questionText.textContent = word.chinese;
+      els.questionHint.textContent = `请写出英文单词。英文释义：${word.definition || "暂无"}`;
+      els.wordIdTag.textContent = `#${word.id}`;
+      els.partTag.textContent = `词性 ${word.partOfSpeech}`;
+      els.initialTag.textContent = `首字母 ${word.initial}`;
+      if (state.showAnswer) reveal(word); else hideReveal();
+    }
+    function render(){
+      renderStats();
+      renderQuestion();
+      renderSide();
+      els.answerInput.value = "";
+      els.answerInput.classList.remove("correct", "wrong");
+      saveProgress();
+    }
+    function submitAnswer(){
+      const word = currentWord();
+      if (!word) return;
+      const user = normalize(els.answerInput.value);
+      if (!user) {
+        setFeedback("先输入英文单词，再按 Enter 或点击提交。");
+        return;
+      }
+      const correct = normalize(word.word);
+      els.answerInput.classList.remove("correct", "wrong");
+      const prev = statusOf(word) || { correct: 0, wrong: 0, status: "learning" };
+      if (user === correct) {
+        saveStatus(word, prev.status === "unknown" ? "learning" : (prev.status || "learning"), { correct: (prev.correct || 0) + 1 }, "答对");
+        playCorrectSound();
+        setFeedback(`回答正确：${word.word}`, "correct");
+        els.answerInput.classList.add("correct");
+        setTimeout(() => nextWord({ autoSpeak: true }), 320);
+      } else {
+        saveStatus(word, "unknown", { wrong: (prev.wrong || 0) + 1 }, "答错");
+        playWrongSound();
+        setFeedback(`不太对，正确答案是 ${word.word}`, "wrong");
+        els.answerInput.classList.add("wrong");
+        reveal(word);
+      }
+    }
+    function warnIfCurrentInputWrong(){
+      const word = currentWord();
+      if (!word) return false;
+      const typed = normalize(els.answerInput.value);
+      const isWrong = Boolean(typed && typed !== normalize(word.word));
+      if (isWrong) playWrongSound();
+      return isWrong;
+    }
+    function handleNextWordShortcut(){
+      const shouldWarn = warnIfCurrentInputWrong();
+      if (shouldWarn) return;
+      nextWord();
+    }
+    function resetPosition(){
+      state.index = 0;
+      state.currentId = null;
+      state.showAnswer = false;
+    }
+    function initOptions(){
+      const parts = ["all", ...new Set(WORDS.map((item) => item.partOfSpeech).filter(Boolean))];
+      const initials = ["all", ...new Set(WORDS.map((item) => item.initial).filter(Boolean).sort())];
+      els.partSelect.innerHTML = parts.map((value) => `<option value="${esc(value)}">${value === "all" ? "全部词性" : esc(value)}</option>`).join("");
+      els.initialSelect.innerHTML = initials.map((value) => `<option value="${esc(value)}">${value === "all" ? "全部首字母" : esc(value)}</option>`).join("");
+      els.sortSelect.innerHTML = '<option value="sequential">顺序练习</option>';
+      els.sortSelect.value = "sequential";
+      els.sortSelect.disabled = true;
+      restoreProgress();
+    }
+    function bind(){
+      const unlockAudio = () => ensureAudio();
+      document.addEventListener("pointerdown", unlockAudio, { once: true });
+      document.addEventListener("keydown", unlockAudio, { once: true });
+      els.themeToggleBtn.addEventListener("click", toggleTheme);
+      els.exportProgressBtn.addEventListener("click", exportProgress);
+      els.importProgressBtn.addEventListener("click", () => els.importProgressInput.click());
+      els.importProgressInput.addEventListener("change", () => {
+        importProgressFile(els.importProgressInput.files?.[0] || null);
+        els.importProgressInput.value = "";
+      });
+      els.partSelect.addEventListener("change", () => applyFilterChange(() => { state.part = els.partSelect.value; }));
+      els.initialSelect.addEventListener("change", () => applyFilterChange(() => { state.initial = els.initialSelect.value; }));
+      els.searchInput.addEventListener("input", () => {
+        clearTimeout(searchDebounceTimer);
+        searchDebounceTimer = setTimeout(() => {
+          applyFilterChange(() => { state.search = els.searchInput.value; });
+        }, 300);
+      });
+      document.querySelectorAll('input[name="mode"]').forEach((radio) => radio.addEventListener("change", () => {
+        applyFilterChange(() => { state.mode = document.querySelector('input[name="mode"]:checked').value; });
+      }));
+      els.submitBtn.addEventListener("click", submitAnswer);
+      els.hintBtn.addEventListener("click", showCurrentAnswer);
+      els.speakBtn.addEventListener("click", () => speakCurrentWord());
+      els.exampleSpeakBtn.addEventListener("click", () => {
+        const word = currentWord();
+        if (word?.example) speak(word.example);
+      });
+      els.masterBtn.addEventListener("click", () => markCurrentWord("mastered", "标记掌握", "correct", playCorrectSound));
+      els.unknownBtn.addEventListener("click", () => markCurrentWord("unknown", "标记生词", "wrong", playWrongSound));
+      els.answerInput.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          submitAnswer();
+          return;
+        }
+        if (event.key === " ") {
+          event.preventDefault();
+          handleNextWordShortcut();
+          return;
+        }
+        if (event.key.length === 1 && /[a-zA-Z]/.test(event.key) && !event.ctrlKey && !event.metaKey && !event.altKey) playKeySound();
+      });
+      window.addEventListener("keydown", (event) => {
+        if (!event.ctrlKey) {
+          if (event.key === " " && document.activeElement !== els.answerInput) {
+            event.preventDefault();
+            handleNextWordShortcut();
+          }
+          return;
+        }
+        if (handleCtrlShortcut(event.key)) {
+          event.preventDefault();
+        }
+      });
+    }
+    function init(){
+      initOptions();
+      bind();
+      render();
+      setFeedback(savedProgress.currentWordId ? "已恢复上次学习进度，可以继续练习。" : "词库已载入，可以开始练习。");
+      els.answerInput.focus();
+      speakCurrentWord();
+    }
+    init();
+  </script>
 </body>
 </html>
